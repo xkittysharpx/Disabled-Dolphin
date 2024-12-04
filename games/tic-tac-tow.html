@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <h1>Tic Tac Toe</h1>
+    </header>
+    <main>
+        <div class="tic-tac-toe-grid" id="grid">
+            <button class="cell" data-cell="0"></button>
+            <button class="cell" data-cell="1"></button>
+            <button class="cell" data-cell="2"></button>
+            <button class="cell" data-cell="3"></button>
+            <button class="cell" data-cell="4"></button>
+            <button class="cell" data-cell="5"></button>
+            <button class="cell" data-cell="6"></button>
+            <button class="cell" data-cell="7"></button>
+            <button class="cell" data-cell="8"></button>
+        </div>
+        <p id="status">Player X's turn</p>
+    </main>
+    <footer>
+        <p>&copy; 2024 Dolph. All rights reserved. 🐬</p>
+    </footer>
+    <script>
+        const cells = document.querySelectorAll(".cell");
+        const status = document.getElementById("status");
+        let currentPlayer = "X";
+        let board = ["", "", "", "", "", "", "", "", ""];
+        
+        function checkWin() {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+            return winPatterns.some(pattern => {
+                return pattern.every(index => board[index] === currentPlayer);
+            });
+        }
+
+        function handleClick(e) {
+            const index = e.target.getAttribute("data-cell");
+            if (board[index] === "") {
+                board[index] = currentPlayer;
+                e.target.textContent = currentPlayer;
+                if (checkWin()) {
+                    status.textContent = `${currentPlayer} wins!`;
+                    return;
+                }
+                currentPlayer = currentPlayer === "X" ? "O" : "X";
+                status.textContent = `${currentPlayer}'s turn`;
+            }
+        }
+
+        cells.forEach(cell => {
+            cell.addEventListener("click", handleClick);
+        });
+    </script>
+</body>
+</html>
