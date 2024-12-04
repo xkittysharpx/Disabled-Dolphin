@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <h1>Memory Game</h1>
+    </header>
+    <main>
+        <div class="memory-board" id="board"></div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Dolph. All rights reserved. 🐬</p>
+    </footer>
+    <script>
+        const board = document.getElementById("board");
+        const symbols = ["🐶", "🐱", "🐭", "🐹", "🐰", "🐯", "🐨", "🐸"];
+        let shuffledSymbols = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
+        let flipped = [];
+        let matched = 0;
+
+        function createBoard() {
+            shuffledSymbols.forEach((symbol, index) => {
+                const card = document.createElement("div");
+                card.classList.add("card");
+                card.dataset.index = index;
+                card.textContent = "?";
+                board.appendChild(card);
+
+                card.addEventListener("click", () => flipCard(card));
+            });
+        }
+
+        function flipCard(card) {
+            if (flipped.length === 2 || card.textContent !== "?") return;
+
+            card.textContent = shuffledSymbols[card.dataset.index];
+            flipped.push(card);
+
+            if (flipped.length === 2) {
+                if (flipped[0].textContent === flipped[1].textContent) {
+                    matched++;
+                    flipped = [];
+                    if (matched === symbols.length) alert("You win!");
+                } else {
+                    setTimeout(() => {
+                        flipped.forEach(card => card.textContent = "?");
+                        flipped = [];
+                    }, 1000);
+                }
+            }
+        }
+
+        createBoard();
+    </script>
+    <style>
+        .memory-board {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-template-rows: repeat(4, 100px);
+            gap: 10px;
+            justify-content: center;
+        }
+        .card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            border: 1px solid #000;
+            font-size: 2em;
+            cursor: pointer;
+            height: 100px;
+            width: 100px;
+        }
+    </style>
+</body>
+</html>
