@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <h1>Flappy Bird</h1>
+    </header>
+    <main>
+        <canvas id="flappyCanvas" width="400" height="600"></canvas>
+        <script>
+            const canvas = document.getElementById("flappyCanvas");
+            const ctx = canvas.getContext("2d");
+
+            let bird = { x: 50, y: 300, vy: 0 };
+            let pipes = [];
+            let gameOver = false;
+            let score = 0;
+
+            function drawBird() {
+                ctx.fillStyle = "yellow";
+                ctx.fillRect(bird.x, bird.y, 20, 20);
+            }
+
+            function drawPipes() {
+                pipes.forEach(pipe => {
+                    ctx.fillStyle = "green";
+                    ctx.fillRect(pipe.x, 0, 50, pipe.top);
+                    ctx.fillRect(pipe.x, pipe.bottom, 50, canvas.height - pipe.bottom);
+                });
+            }
+
+            function update() {
+                if (gameOver) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                bird.vy += 0.5;
+                bird.y += bird.vy;
+
+                pipes.forEach(pipe => {
+                    pipe.x -= 2;
+                    if (pipe.x + 50 < 0) {
+                        pipe.x = canvas.width;
+                        pipe.top = Math.random() * 200 + 50;
+                        pipe.bottom = pipe.top + 100;
+                        score++;
+                    }
+                    if (
+                        bird.x < pipe.x + 50 &&
+                        bird.x + 20 > pipe.x &&
+                        (bird.y < pipe.top || bird.y + 20 > pipe.bottom)
+                    ) {
+                        gameOver = true;
+                    }
+                });
+
+                drawBird();
+                drawPipes();
+                ctx.fillStyle = "black";
+                ctx.fillText(`Score: ${score}`, 10, 20);
+
+                requestAnimationFrame(update);
+            }
+
+            canvas.addEventListener("click", () => {
+                bird.vy = -8;
+            });
+
+            function initPipes() {
+                pipes.push({ x: 400, top: 100, bottom: 300 });
+            }
+
+            initPipes();
+            update();
+        </script>
+    </main>
+    <footer>
+        <p>&copy; 2024 Dolph. All rights reserved. 🐬</p>
+    </footer>
+</body>
+</html>
