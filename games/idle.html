@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idle Tycoon</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <h1>Idle Tycoon</h1>
+    </header>
+    <main>
+        <div>
+            <p>Balance: $<span id="balance">0</span></p>
+            <button id="earnMoney">Earn Money</button>
+            <button id="upgrade">Upgrade (Cost: $50)</button>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Dolph. All rights reserved. 🐬</p>
+    </footer>
+    <script>
+        let balance = 0;
+        let earningsPerClick = 1;
+        const balanceDisplay = document.getElementById("balance");
+        const earnMoneyButton = document.getElementById("earnMoney");
+        const upgradeButton = document.getElementById("upgrade");
+
+        earnMoneyButton.addEventListener("click", () => {
+            balance += earningsPerClick;
+            balanceDisplay.textContent = balance;
+        });
+
+        upgradeButton.addEventListener("click", () => {
+            if (balance >= 50) {
+                balance -= 50;
+                earningsPerClick += 1;
+                balanceDisplay.textContent = balance;
+            }
+        });
+    </script>
+</body>
+</html>
