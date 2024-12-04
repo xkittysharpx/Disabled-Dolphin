@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <h1>Snake</h1>
+    </header>
+    <main>
+        <canvas id="snakeCanvas" width="400" height="400"></canvas>
+        <p>Score: <span id="score">0</span></p>
+    </main>
+    <footer>
+        <p>&copy; 2024 Dolph. All rights reserved. 🐬</p>
+    </footer>
+    <script>
+        const canvas = document.getElementById("snakeCanvas");
+        const ctx = canvas.getContext("2d");
+        const scale = 20;
+        const rows = canvas.height / scale;
+        const columns = canvas.width / scale;
+        let snake = [{ x: 5, y: 5 }];
+        let food = { x: 8, y: 8 };
+        let direction = "right";
+        let score = 0;
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw the snake
+            snake.forEach((segment, index) => {
+                ctx.fillStyle = index === 0 ? "green" : "white";
+                ctx.fillRect(segment.x * scale, segment.y * scale, scale, scale);
+            });
+
+            // Draw the food
+            ctx.fillStyle = "red";
+            ctx.fillRect(food.x * scale, food.y * scale, scale, scale);
+
+            // Move the snake
+            let head = { ...snake[0] };
+            if (direction === "right") head.x++;
+            else if (direction === "left") head.x--;
+            else if (direction === "up") head.y--;
+            else if (direction === "down") head.y++;
+
+            // Check for collisions
+            if (head.x === food.x && head.y === food.y) {
+                food = { x: Math.floor(Math.random() * columns), y: Math.floor(Math.random() * rows) };
+                score++;
+                document.getElementById("score").textContent = score;
+            } else {
+                snake.pop();
+            }
+
+            // Add the new head to the snake
+            snake.unshift(head);
+
+            // Check for wall collisions
+            if (head.x < 0 || head.x >= columns || head.y < 0 || head.y >= rows || snake.some((segment, index) => index !== 0 && segment.x === head.x && segment.y === head.y)) {
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            snake = [{ x: 5, y: 5 }];
+            direction = "right";
+            score = 0;
+            document.getElementById("score").textContent = score;
+        }
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowUp" && direction !== "down") direction = "up";
+            else if (e.key === "ArrowDown" && direction !== "up") direction = "down";
+            else if (e.key === "ArrowLeft" && direction !== "right") direction = "left";
+            else if (e.key === "ArrowRight" && direction !== "left") direction = "right";
+        });
+
+        setInterval(draw, 100);
+    </script>
+</body>
+</html>
